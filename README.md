@@ -17,6 +17,7 @@ This project is a real-time cryptocurrency price tracking, analytics, and alerti
 
 ## 🧱 Architecture
 
+```plaintext
 [Binance WS API] → [Kafka Producer] → [Kafka Topic: crypto_prices]
                                    ↓
               [Analytics] [Alerting] [Storage] [ksqlDB Queries]
@@ -24,6 +25,8 @@ This project is a real-time cryptocurrency price tracking, analytics, and alerti
                         [Kafka Topic: alerts]
                                    ↓
                      [Backend API → Dashboard → User]
+```
+
 
 ## 🧪 Prerequisites
 
