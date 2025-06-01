@@ -17,7 +17,6 @@ This project is a real-time cryptocurrency price tracking, analytics, and alerti
 
 ## 🧱 Architecture
 
-```plaintext
 [Binance WS API] → [Kafka Producer] → [Kafka Topic: crypto_prices]
                                    ↓
               [Analytics] [Alerting] [Storage] [ksqlDB Queries]
@@ -41,7 +40,6 @@ Binance API key (optional)
 ## 🚀 Getting Started
 
 ```
-
 # 1. Clone the repo
 git clone https://github.com/youruser/crypto-alert-system.git
 cd crypto-alert-system
@@ -60,7 +58,6 @@ python consumers/alert_consumer.py
 # 5. (Optional) Run the dashboard
 cd dashboard/frontend
 npm install && npm start
-
 ```
 
 ## 📡 Kafka Topics
