@@ -31,3 +31,4 @@ except KeyboardInterrupt:
     print("Stopping consumer...")
 finally:
     consumer.close()
+
