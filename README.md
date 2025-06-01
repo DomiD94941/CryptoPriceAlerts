@@ -65,5 +65,5 @@ npm install && npm start
 
 ## 📡 Kafka Topics
 
-# crypto_prices: Raw streaming data from Binance
-# alerts: Triggered alerts (e.g., threshold exceeded)
+crypto_prices: Raw streaming data from Binance
+alerts: Triggered alerts (e.g., threshold exceeded)
