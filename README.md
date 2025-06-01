@@ -1,21 +1,21 @@
-# 🚀 Real-Time Crypto Price Analytics & Alert System
+# Real-Time Crypto Price Analytics & Alert System
 
 This project is a real-time cryptocurrency price tracking, analytics, and alerting system powered by **Apache Kafka**. It collects live market data from crypto exchanges (e.g., Binance), processes it in real time, and triggers alerts based on user-defined conditions.
 
 ---
 
-## 📊 Features
+## Features
 
-- ✅ Real-time crypto price streaming via Kafka
-- 📈 Moving average, price delta, and volatility analytics
-- 🔔 Configurable alert system for threshold breaches
-- 💾 Optional persistence to PostgreSQL
-- 📺 Live dashboard (React.js)
-- 🧠 Stream processing with **ksqlDB** or **Kafka Streams**
+- Real-time crypto price streaming via Kafka
+- Moving average, price delta, and volatility analytics
+- Configurable alert system for threshold breaches
+- Optional persistence to PostgreSQL
+- Live dashboard (React.js)
+- Stream processing with **ksqlDB** or **Kafka Streams**
 
 ---
 
-## 🧱 Architecture
+## Architecture
 
 ```plaintext
 [Binance WS API] → [Kafka Producer] → [Kafka Topic: crypto_prices]
@@ -28,7 +28,7 @@ This project is a real-time cryptocurrency price tracking, analytics, and alerti
 ```
 
 
-## 🧪 Prerequisites
+## Prerequisites
 
 Docker & Docker Compose
 
@@ -40,7 +40,7 @@ Git
 
 Binance API key (optional)
 
-## 🚀 Getting Started
+## Getting Started
 
 ```bash
 # 1. Clone the repo
@@ -63,7 +63,7 @@ cd dashboard/frontend
 npm install && npm start
 ```
 
-## 📡 Kafka Topics
+## Kafka Topics
 
 crypto_prices: Raw streaming data from Binance
 alerts: Triggered alerts (e.g., threshold exceeded)
