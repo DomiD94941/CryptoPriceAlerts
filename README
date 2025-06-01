@@ -39,7 +39,7 @@ Binance API key (optional)
 
 ## 🚀 Getting Started
 
-```
+```bash
 # 1. Clone the repo
 git clone https://github.com/youruser/crypto-alert-system.git
 cd crypto-alert-system
