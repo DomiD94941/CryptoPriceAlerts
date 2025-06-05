@@ -62,7 +62,12 @@ npm install && npm start
 
 ## Run
 
-# 1. Create Kafka topic
+# 1. Run docker-compose.yaml
+```bash
+docker-compose up -d
+``` 
+
+# 2. Create Kafka topic
 ```bash
 docker exec cryptopricealerts-kafka-1 kafka-topics --create --bootstrap-server kafka:9092 --replication-factor 1 --partitions 1 --topic crypto_prices
 ``` 
@@ -79,5 +84,5 @@ CREATE STREAM crypto_prices_stream (
   KAFKA_TOPIC = 'crypto_prices',
   VALUE_FORMAT = 'JSON'
 );
-
 ```
+
