@@ -73,6 +73,34 @@ services:
     depends_on:
       - kafka
 
+  connect:
+    image: confluentinc/cp-kafka-connect:7.6.0
+    depends_on:
+      - kafka
+      - postgres
+    ports:
+      - "8083:8083"
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: "kafka:9092"
+      CONNECT_REST_ADVERTISED_HOST_NAME: "connect"
+      CONNECT_GROUP_ID: "connect-cluster"
+      CONNECT_CONFIG_STORAGE_TOPIC: "connect-configs"
+      CONNECT_OFFSET_STORAGE_TOPIC: "connect-offsets"
+      CONNECT_STATUS_STORAGE_TOPIC: "connect-status"
+      CONNECT_KEY_CONVERTER: "org.apache.kafka.connect.storage.StringConverter"
+      CONNECT_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: "false"
+      CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE: "false"
+      CONNECT_REST_PORT: 8083
+      CONNECT_PLUGIN_PATH: "/usr/share/java,/etc/kafka-connect/jars"
+      CONNECT_LOG4J_LOGGERS: "org.reflections=ERROR"
+      # JDBC connector
+      CONNECTOR_JDBC_URL: "jdbc:postgresql://postgres:5432/cryptodb"
+      CONNECTOR_JDBC_USER: "crypto"
+      CONNECTOR_JDBC_PASSWORD: "crypto"
+    volumes:
+      - ./plugins:/etc/kafka-connect/jars
+
 volumes:
   pgdata:
   kafka_data:
