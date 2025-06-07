@@ -2,7 +2,7 @@ import json
 import websocket
 from confluent_kafka import Producer
 
-producer = Producer({'bootstrap.servers': 'localhost:9093'})  
+producer = Producer({'bootstrap.servers': 'localhost:29092'})  
 TOPIC = 'crypto_prices'
 BINANCE_WS = "wss://stream.binance.com:9443/ws/btcusdt@trade"
 

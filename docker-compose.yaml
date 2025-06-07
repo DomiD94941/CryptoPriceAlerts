@@ -1,26 +1,42 @@
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper:7.6.0
+    container_name: zookeeper
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
     ports:
       - "2181:2181"
+    networks:
+      - crypto-network
+    healthcheck:
+      test: ["CMD", "echo", "ruok", "|", "nc", "localhost", "2181"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
   kafka:
     image: confluentinc/cp-kafka:7.6.0
+    container_name: kafka
     ports:
       - "9092:9092"
-      - "9093:9093"
+      - "29092:29092"
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_HOST://0.0.0.0:9093
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:9093
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_HOST://0.0.0.0:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+    command: >
+      bash -c "
+        /etc/confluent/docker/run &
+        sleep 10 &&
+        kafka-topics --bootstrap-server localhost:9092 --create --if-not-exists --topic crypto_prices --partitions 1 --replication-factor 1 &&
+        wait
+      "
     healthcheck:
       test: ["CMD", "kafka-topics", "--bootstrap-server", "localhost:9092", "--list"]
       interval: 10s
@@ -28,31 +44,47 @@ services:
       retries: 10
     volumes:
       - kafka_data:/var/lib/kafka/data
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+    networks:
+      - crypto-network
 
   ksqldb-server:
     image: confluentinc/ksqldb-server:0.29.0
+    container_name: ksqldb-server
     depends_on:
       kafka:
         condition: service_healthy
     ports:
       - "8088:8088"
     environment:
-      KSQL_CONFIG_DIR: "/etc/ksqldb"
-      KSQL_BOOTSTRAP_SERVERS: kafka:9092
-      KSQL_LISTENERS: "http://0.0.0.0:8088"
-      KSQL_KSQL_SERVICE_ID: "crypto-alert"
+      KSQL_BOOTSTRAP_SERVERS: PLAINTEXT://kafka:9092
+      KSQL_LISTENERS: http://0.0.0.0:8088
+      KSQL_KSQL_SERVICE_ID: crypto-alert
       KSQL_KSQL_INTERNAL_TOPIC_REPLICATION_FACTOR: 1
       KSQL_KSQL_COMMAND_TOPIC_REPLICATION_FACTOR: 1
       KSQL_KSQL_SINK_REPLICATION_FACTOR: 1
+      KSQL_LOGGING_PROCESSING_STREAM_AUTO_CREATE: "true"
+      KSQL_LOGGING_PROCESSING_TOPIC_AUTO_CREATE: "true"
+    networks:
+      - crypto-network
+
   ksqldb-cli:
     image: confluentinc/ksqldb-cli:0.29.0
+    container_name: ksqldb-cli
     depends_on:
       - ksqldb-server
-    entrypoint: /bin/sh
-    tty: true
+    volumes:
+      - ./ksql/init:/ksql-init
+    entrypoint: ["bash", "/ksql-init/init-ksql.sh"]
+    networks:
+      - crypto-network
+
 
   postgres:
     image: postgres:15
+    container_name: postgres
     restart: always
     environment:
       POSTGRES_USER: crypto
@@ -62,9 +94,12 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    networks:
+      - crypto-network
 
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
     ports:
       - "8080:8080"
     environment:
@@ -72,9 +107,12 @@ services:
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: "kafka:9092"
     depends_on:
       - kafka
+    networks:
+      - crypto-network
 
   connect:
     image: confluentinc/cp-kafka-connect:7.6.0
+    container_name: kafka-connect
     depends_on:
       - kafka
       - postgres
@@ -94,15 +132,18 @@ services:
       CONNECT_REST_PORT: 8083
       CONNECT_PLUGIN_PATH: "/usr/share/java,/etc/kafka-connect/jars"
       CONNECT_LOG4J_LOGGERS: "org.reflections=ERROR"
-      # JDBC connector
       CONNECTOR_JDBC_URL: "jdbc:postgresql://postgres:5432/cryptodb"
       CONNECTOR_JDBC_USER: "crypto"
       CONNECTOR_JDBC_PASSWORD: "crypto"
     volumes:
       - ./plugins:/etc/kafka-connect/jars
+    networks:
+      - crypto-network
+
+networks:
+  crypto-network:
+    driver: bridge
 
 volumes:
   pgdata:
   kafka_data:
-
-
