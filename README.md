@@ -67,22 +67,7 @@ npm install && npm start
 docker-compose up -d
 ``` 
 
-# 2. Create Kafka topic
-```bash
-docker exec cryptopricealerts-kafka-1 kafka-topics --create --bootstrap-server kafka:9092 --replication-factor 1 --partitions 1 --topic crypto_prices
-``` 
+# 2. Run Producer and Consumer
 
-# 2. Run ksqlDB and create stream
-```bash
-docker exec -it cryptopricealerts-ksqldb-cli-1 ksql http://ksqldb-server:8088
 
-CREATE STREAM crypto_prices_stream (
-  symbol VARCHAR,
-  price DOUBLE,
-  timestamp BIGINT
-) WITH (
-  KAFKA_TOPIC = 'crypto_prices',
-  VALUE_FORMAT = 'JSON'
-);
-```
 
