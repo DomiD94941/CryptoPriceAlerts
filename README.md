@@ -41,5 +41,7 @@ This project is a **real-time streaming pipeline** that ingests cryptocurrency p
 1. **Clone & Start the Stack**
 
 ```bash
-docker-compose down -v && docker-compose up -d
+
+docker-compose down -v
+docker-compose up -d
 ```
