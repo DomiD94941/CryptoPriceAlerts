@@ -35,6 +35,9 @@ services:
         /etc/confluent/docker/run &
         sleep 10 &&
         kafka-topics --bootstrap-server localhost:9092 --create --if-not-exists --topic crypto_prices --partitions 1 --replication-factor 1 &&
+        kafka-topics --bootstrap-server localhost:9092 --create --if-not-exists --topic connect-offsets --partitions 1 --replication-factor 1 --config cleanup.policy=compact &&
+        kafka-topics --bootstrap-server localhost:9092 --create --if-not-exists --topic connect-status --partitions 1 --replication-factor 1 --config cleanup.policy=compact &&
+        kafka-topics --bootstrap-server localhost:9092 --create --if-not-exists --topic connect-configs --partitions 1 --replication-factor 1 --config cleanup.policy=compact &&
         wait
       "
     healthcheck:
@@ -137,8 +140,21 @@ services:
       CONNECTOR_JDBC_PASSWORD: "crypto"
     volumes:
       - ./plugins:/etc/kafka-connect/jars
+      - ./connect-init:/connect-init
     networks:
       - crypto-network
+  connector-init:
+    image: curlimages/curl:latest
+    container_name: connector-init
+    depends_on:
+      connect:
+        condition: service_healthy
+    entrypoint: ["/bin/sh", "/connect-init/register-connector.sh"]
+    volumes:
+      - ./connect-init:/connect-init
+    networks:
+      - crypto-network
+
 
 networks:
   crypto-network:

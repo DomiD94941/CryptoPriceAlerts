@@ -1,0 +1,21 @@
+{
+  "name": "avg-price-sink",
+  "config": {
+    "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
+    "tasks.max": "1",
+    "topics": "CRYPTO_PRICES_FORMATTED",
+    "pk.mode": "record_value",
+    "pk.fields": "SYMBOL, TS_FMT",
+    "connection.url": "jdbc:postgresql://postgres:5432/cryptodb",
+    "connection.user": "crypto",
+    "connection.password": "crypto",
+    "auto.create": "true",
+    "auto.evolve": "true",
+    "insert.mode": "insert",
+    "delete.enabled": "false",
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "key.converter.schemas.enable": "false",
+    "value.converter.schemas.enable": "false"
+  }
+}
