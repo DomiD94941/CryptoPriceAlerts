@@ -27,15 +27,6 @@ This project is a **real-time streaming pipeline** that ingests cryptocurrency p
 
 ---
 
-## 🧪 Example Output in PostgreSQL
-
-    window_start    | avg_price |
---------------------|-----------|
-2025-06-09 21:40:00 |  68123.4  |
-2025-06-09 21:40:00 |  3412.8   |
-
----
-
 ## 🚀 How to Run
 
 1. **Clone & Start the Stack**
