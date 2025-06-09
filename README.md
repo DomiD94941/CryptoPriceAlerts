@@ -29,7 +29,7 @@ This project is a **real-time streaming pipeline** that ingests cryptocurrency p
 
 ## How to Run
 
-1. **Clone & Start the Stack (Just it. Everything you need is automatic after starting)**
+1. **Clone & Start the Stack (Just it. Everything needed is done automatically after running the commands below)**
 
 ```bash
 
