@@ -1,18 +1,18 @@
-# 🧠 Crypto Price Alerts – Real-Time Kafka Pipeline with PostgreSQL Sink
+# Crypto Price Alerts – Real-Time Kafka Pipeline with PostgreSQL Sink
 
 This project is a **real-time streaming pipeline** that ingests cryptocurrency prices (e.g. BTCUSDT, ETHUSDT), processes and aggregates them using **Apache Kafka + ksqlDB**, and stores 1-minute average prices in **PostgreSQL**.
 
 ---
 
-## 📦 Stack
+## Stack
 
-- 🟡 **Apache Kafka** – message broker
-- 🟣 **ksqlDB** – real-time SQL engine over Kafka
-- 🟢 **Kafka Connect** – ETL layer with JDBC Sink
-- 🐘 **PostgreSQL** – destination database
-- 🧰 **Confluent Schema Registry** – AVRO schema management
-- 📊 **Kafka UI** – GUI to browse topics
-- 🐳 **Docker Compose** – for full infrastructure setup
+- **Apache Kafka** – message broker
+- **ksqlDB** – real-time SQL engine over Kafka
+- **Kafka Connect** – ETL layer with JDBC Sink
+- **PostgreSQL** – destination database
+- **Confluent Schema Registry** – AVRO schema management
+- **Kafka UI** – GUI to browse topics
+- **Docker Compose** – for full infrastructure setup
 
 ---
 
@@ -27,9 +27,9 @@ This project is a **real-time streaming pipeline** that ingests cryptocurrency p
 
 ---
 
-## 🚀 How to Run
+## How to Run
 
-1. **Clone & Start the Stack**
+1. **Clone & Start the Stack (Just it. Everything you need is automatic after starting)**
 
 ```bash
 
