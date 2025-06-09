@@ -1,4 +1,4 @@
-CREATE TABLE avg_crypto_prices_per_minute AS
+CREATE TABLE avg_crypto_prices_per_minute WITH (VALUE_FORMAT = 'AVRO') AS
 SELECT
   symbol,
   TIMESTAMPTOSTRING(WINDOWSTART, 'yyyy-MM-dd HH:mm:ss', 'Europe/Warsaw') AS window_start,

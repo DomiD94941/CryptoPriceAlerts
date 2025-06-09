@@ -25,7 +25,7 @@ try:
         symbol = data.get('symbol')
         price = data.get('price')
         ts = data.get('timestamp')
-        print(f"✔ {symbol} @ {price} (ts: {ts})")
+        print(f"{symbol} @ {price} (ts: {ts})")
 
 
 except KeyboardInterrupt:

@@ -70,6 +70,8 @@ services:
       KSQL_KSQL_SINK_REPLICATION_FACTOR: 1
       KSQL_LOGGING_PROCESSING_STREAM_AUTO_CREATE: "true"
       KSQL_LOGGING_PROCESSING_TOPIC_AUTO_CREATE: "true"
+      KSQL_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      KSQL_KSQL_SCHEMA_REGISTRY_URL: http://schema-registry:8081
     networks:
       - crypto-network
 
@@ -129,9 +131,11 @@ services:
       CONNECT_OFFSET_STORAGE_TOPIC: "connect-offsets"
       CONNECT_STATUS_STORAGE_TOPIC: "connect-status"
       CONNECT_KEY_CONVERTER: "org.apache.kafka.connect.storage.StringConverter"
-      CONNECT_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
-      CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: "false"
-      CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE: "false"
+      CONNECT_VALUE_CONVERTER: "io.confluent.connect.avro.AvroConverter"
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
+      CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
+      CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_REST_PORT: 8083
       CONNECT_PLUGIN_PATH: "/usr/share/java,/etc/kafka-connect/jars"
       CONNECT_LOG4J_LOGGERS: "org.reflections=ERROR"
@@ -152,6 +156,20 @@ services:
     entrypoint: ["/bin/sh", "/connect-init/register-connector.sh"]
     volumes:
       - ./connect-init:/connect-init
+    networks:
+      - crypto-network
+  schema-registry:
+    image: confluentinc/cp-schema-registry:7.6.0
+    container_name: schema-registry
+    depends_on:
+      kafka:
+        condition: service_healthy
+    ports:
+      - "8081:8081"
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: PLAINTEXT://kafka:9092
     networks:
       - crypto-network
 

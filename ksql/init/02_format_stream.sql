@@ -1,4 +1,4 @@
-CREATE STREAM crypto_prices_formatted AS
+CREATE STREAM crypto_prices_formatted WITH (VALUE_FORMAT = 'AVRO') AS
 SELECT
   symbol,
   price,
