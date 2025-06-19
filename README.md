@@ -36,3 +36,32 @@ This project is a **real-time streaming pipeline** that ingests cryptocurrency p
 docker-compose down -v
 docker-compose up -d
 ```
+
+2. **Run the Binance price producer**
+
+```bash
+pip install -r requirements.txt
+python producer/binance_producer.py
+```
+
+3. **Run the sample analytics consumer**
+
+```bash
+python consumer/analytics_consumer.py
+```
+
+4. **Start the Node server (once implemented)**
+
+```bash
+cd server
+npm install
+npm start
+```
+
+5. **Start the React client (once implemented)**
+
+```bash
+cd client
+npm install
+npm start
+```
