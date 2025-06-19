@@ -16,7 +16,7 @@ This project is a **real-time streaming pipeline** that ingests cryptocurrency p
 
 ---
 
-## ⚙️ What It Does
+## What It Does
 
 1. **Data Ingestion**: a Kafka producer (WebSocket client) sends crypto price ticks to the topic `crypto_prices` in raw JSON.
 2. **Stream Parsing**: `ksqlDB` creates a stream `crypto_prices_stream` to parse incoming JSON data.
