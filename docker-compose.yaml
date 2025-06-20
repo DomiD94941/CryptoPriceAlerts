@@ -101,6 +101,11 @@ services:
       - pgdata:/var/lib/postgresql/data
     networks:
       - crypto-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U crypto"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
@@ -173,6 +178,65 @@ services:
     networks:
       - crypto-network
 
+  binance_producer:
+    image: python:3.11-slim
+    volumes:
+      - ./producer:/app
+    working_dir: /app
+    command: sh -c "pip install confluent-kafka websocket-client && python binance_producer.py"
+    environment:
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    depends_on:
+      - kafka
+    networks:
+      - crypto-network
+  analytics_consumer:
+    image: python:3.11-slim
+    volumes:
+      - ./consumer:/app
+    working_dir: /app
+    command: sh -c "pip install confluent-kafka && sleep 4 && python analytics_consumer.py"
+    environment:
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    depends_on:
+      - kafka
+    networks:
+      - crypto-network
+
+  server:
+    image: node:18
+    container_name: node-server
+    environment:
+      - PGHOST=postgres
+      - PGUSER=crypto
+      - PGPASSWORD=crypto
+      - PGDATABASE=cryptodb
+    working_dir: /app
+    volumes:
+      - ./server:/app
+    command: sh -c "npm install socket.io pg && npm install && npm start"
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - crypto-network
+
+
+  client:
+    image: node:18
+    container_name: react-client
+    working_dir: /app
+    volumes:
+      - ./client:/app
+    command: sh -c "npm install chartjs-adapter-date-fns socket.io-client react-chartjs-2 chart.js && npm install && npm start"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - server
+    networks:
+      - crypto-network
 
 networks:
   crypto-network:
