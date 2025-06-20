@@ -1,8 +1,9 @@
 import json
+import os
 import websocket
 from confluent_kafka import Producer
-
-producer = Producer({'bootstrap.servers': 'localhost:29092'})  
+ 
+producer = Producer({'bootstrap.servers': os.getenv('KAFKA_BOOTSTRAP_SERVERS', 'localhost:29092')})
 TOPIC = 'crypto_prices'
 BINANCE_WS = "wss://stream.binance.com:9443/ws/btcusdt@trade"
 
@@ -31,5 +32,6 @@ if __name__ == "__main__":
         on_close=on_close
     )
     ws.run_forever()
+
 
 
