@@ -1,8 +1,9 @@
-from confluent_kafka import Consumer
 import json
+import os
+from confluent_kafka import Consumer
 
 conf = {
-    'bootstrap.servers': 'localhost:29092',
+    'bootstrap.servers': os.getenv('KAFKA_BOOTSTRAP_SERVERS', 'localhost:29092'),
     'group.id': 'analytics-group',
     'auto.offset.reset': 'latest'
 }
@@ -10,7 +11,7 @@ conf = {
 consumer = Consumer(conf)
 consumer.subscribe(['crypto_prices'])
 
-print("📥 Listening for crypto prices...")
+print("Listening for crypto prices...")
 
 try:
     while True:
@@ -27,9 +28,7 @@ try:
         ts = data.get('timestamp')
         print(f"{symbol} @ {price} (ts: {ts})")
 
-
 except KeyboardInterrupt:
     print("Stopping consumer...")
 finally:
     consumer.close()
-
