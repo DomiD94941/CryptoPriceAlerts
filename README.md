@@ -1,6 +1,6 @@
-# Crypto Price Alerts – Real-Time Kafka Pipeline with PostgreSQL Sink
+# Crypto Price – Real-Time Kafka Pipeline with PostgreSQL Sink
 
-This project is a **real-time streaming pipeline** that ingests cryptocurrency prices (e.g. BTCUSDT, ETHUSDT), processes and aggregates them using **Apache Kafka + ksqlDB**, and stores 1-minute average prices in **PostgreSQL**.
+This project is a **real-time streaming pipeline** that ingests cryptocurrency prices (e.g. BTCUSDT, ETHUSDT), processes and aggregates them using **Apache Kafka + ksqlDB**, and stores prices in **PostgreSQL**.
 
 ---
 
